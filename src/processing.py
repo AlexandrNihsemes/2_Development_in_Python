@@ -16,6 +16,16 @@ def filter_by_state(dictionary_list: list, state="EXECUTED") -> list:
     return executed_list, canceled_list
 
 
+def sort_by_date(dictionary_list: list, parameter=True) -> list:
+    """Функция, которая принимает список словарей и необязательный параметр,
+    задающий порядок сортировки (по умолчанию — убывание). Функция должна возвращать новый список,
+    отсортированный по дате (date)."""
+
+    sort_list = sorted(dictionary_list, key=lambda x: x["date"], reverse=parameter)
+
+    return sort_list
+
+
 
 
 
