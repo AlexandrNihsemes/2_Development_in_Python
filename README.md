@@ -9,6 +9,8 @@
 2. widget - маскирует номер карты или номер счёта в зависимости от ввода и
 корректирует дату.
 3. processing - фильтрует словари по значению и убыванию.
+4. generators - принимает список словарей на вход и возвращает итератор,
+использует yield для генерации значений по запросу, созжан генератор банковских карт.
 
 ## Использование:
 1. Для использования модуля "masks" нужно подать в функции номер карты и номер счёта.
@@ -19,4 +21,6 @@
 ## Тестирование
 1. test_masks - тестирует функции: get_mask_card_number, get_mask_account.
 2. test_widget - тестирует функции: mask_account_card, get_date.
-3. test_processing - тестирует функции: filter_by_state, sort_by_date. 
+3. test_processing - тестирует функции: filter_by_state, sort_by_date.
+4. test_generators - тестирует функции: filter_by_currency, transaction_descriptions,
+card_number_generator.
