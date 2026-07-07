@@ -51,3 +51,6 @@ my_function(1, 2)
 
 # python src/decorators.py
 # black src/decorators.py
+# flake8 src/decorators.py
+# mypy src/decorators.py
+# isort src/decorators.py

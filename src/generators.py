@@ -1,3 +1,5 @@
+from email import iterators
+
 transactions = [
     {
         "id": 939719570,
@@ -47,7 +49,7 @@ transactions = [
 ]
 
 
-def filter_by_currency(transactions, code="USD"):
+def filter_by_currency(transactions, code = "USD"):
     """Функция, которая принимает на вход список словарей, представляющих транзакции.
     Функция должна возвращать итератор, который поочередно выдает транзакции,
      где валюта операции соответствует заданной (например, USD)."""
@@ -96,3 +98,6 @@ for card_number in card_number_generator(start_number, end_number):
 
 # python src/generators.py
 # black src/generators.py
+# flake8 src/generators.py
+# mypy src/generators.py
+# isort src/generators.py

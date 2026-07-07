@@ -1,7 +1,7 @@
 from datetime import datetime
 
 
-def filter_by_state(dictionary_list: list, state="EXECUTED") -> list:
+def filter_by_state(dictionary_list: list[dict], state: str="EXECUTED") -> list:
     """Функция принимает список словарей и возвращает новый список,
     содержащий только те словари, у которых ключ state соответствует указанному значению.
     """
@@ -20,7 +20,7 @@ def filter_by_state(dictionary_list: list, state="EXECUTED") -> list:
     return filtered_list
 
 
-def sort_by_date(dictionary_list: list, parameter=True) -> list:
+def sort_by_date(dictionary_list: list[dict], parameter: bool=True) -> list[dict]:
     """Функция, которая принимает список словарей и необязательный параметр,
     задающий порядок сортировки (по умолчанию — убывание). Функция должна возвращать новый список,
     отсортированный по дате (date)."""
