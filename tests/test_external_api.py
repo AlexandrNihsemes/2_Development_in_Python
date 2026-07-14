@@ -11,7 +11,7 @@ def test_returns_transaction_amount_usd(mock_get):
     mock_get.return_value.status_code = 200
     mock_get.return_value.json = lambda: {"result": 7500}  # Предположим, что 100 USD = 7500 RUB
 
-    transaction = {"amount": 100, "currency": "USD"}
+    transaction = {"operationAmount": {"amount": 100, "currency": {"code": "USD"}}}
     result = returns_transaction_amount(transaction)
     assert result == 7500
 
@@ -23,14 +23,14 @@ def test_returns_transaction_amount_eur(mock_get):
     mock_get.return_value.status_code = 200
     mock_get.return_value.json = lambda: {"result": 8000}  # Предположим, что 100 EUR = 8000 RUB
 
-    transaction = {"amount": 100, "currency": "EUR"}
+    transaction = {"operationAmount": {"amount": 100, "currency": {"code": "EUR"}}}
     result = returns_transaction_amount(transaction)
     assert result == 8000
 
 
 # Тестирование суммы в рублях
 def test_returns_transaction_amount_rub():
-    transaction = {"amount": 100, "currency": "RUB"}
+    transaction = {"operationAmount": {"amount": 100, "currency": {"code": "RUB"}}}
     result = returns_transaction_amount(transaction)
     assert result == 100  # Просто возвращаем сумму
 
@@ -38,7 +38,7 @@ def test_returns_transaction_amount_rub():
 # Тестирование неизвестной валюты
 @patch("src.external_api.requests.get")  # Замена requests.get на мок
 def test_returns_transaction_amount_invalid_currency(mock_get):
-    transaction = {"amount": 100, "currency": "GBP"}
+    transaction = {"operationAmount": {"amount": 100, "currency": {"code": "GBP"}}}
     try:
         returns_transaction_amount(transaction)
     except ValueError as e:
@@ -52,7 +52,7 @@ def test_returns_transaction_amount_api_error(mock_get):
     mock_get.return_value.status_code = 400
     mock_get.return_value.json = lambda: {"error": {"info": "Invalid API key"}}
 
-    transaction = {"amount": 100, "currency": "USD"}
+    transaction = {"operationAmount": {"amount": 100, "currency": {"code": "USD"}}}
     try:
         returns_transaction_amount(transaction)
     except Exception as e:

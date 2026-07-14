@@ -1,4 +1,5 @@
 import os
+from typing import Dict
 
 import requests
 from dotenv import load_dotenv
@@ -7,35 +8,27 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Получаем ключ API из переменной окружения
-API_KEY = os.getenv("API_KEY")
+API_KEY: str = os.getenv("API_KEY") or ""
 
 # URL API для получения курсов валют
-BASE_URL = "https://api.apilayer.com/exchangerates_data/convert"
+BASE_URL: str = "https://api.apilayer.com/exchangerates_data/convert"
 
 
-def returns_transaction_amount(transaction: dict) -> float:
-    """
-    Функция, которая принимает на вход транзакцию и
-    возвращает сумму транзакции (amount) в рублях, тип данных — float.
-    Если транзакция была в USD или EUR, происходит обращение к внешнему API
-     для получения текущего курса валют и конвертации суммы операции в рубли.
-    """
-    amount = transaction["amount"]
-    currency = transaction["currency"]
+def returns_transaction_amount(transaction: Dict[str, Dict[str, float]]) -> float:
+    amount: float = transaction["operationAmount"]["amount"]
+    currency: str = transaction["operationAmount"]["currency"]["code"]
 
     if currency == "RUB":
         return float(amount)
 
     elif currency in ["USD", "EUR"]:
-        # Формируем URL с динамическими параметрами
-        params = {"to": "RUB", "from": currency, "amount": amount}
-        headers = {"apikey": API_KEY}
+        params: Dict[str, str] = {"to": "RUB", "from": currency, "amount": str(amount)}
+        headers: Dict[str, str] = {"apikey": API_KEY}
         response = requests.get(BASE_URL, headers=headers, params=params)
-        data = response.json()
 
         if response.status_code == 200:
-            # Получаем сумму в рублях из ответа API
-            return data.get("result", 0)
+            data = response.json()
+            return float(data.get("result", 0))  # Изменено здесь
         else:
             raise Exception("Ошибка получения данных о курсе валют")
 
@@ -44,9 +37,9 @@ def returns_transaction_amount(transaction: dict) -> float:
 
 
 # Примеры транзакций
-transaction_usd = {"amount": 100, "currency": "USD"}
-transaction_eur = {"amount": 100, "currency": "EUR"}
-transaction_rub = {"amount": 100, "currency": "RUB"}
+transaction_usd: Dict[str, Dict[str, float]] = {"operationAmount": {"amount": 100.0, "currency": {"code": "USD"}}}
+transaction_eur: Dict[str, Dict[str, float]] = {"operationAmount": {"amount": 100.0, "currency": {"code": "EUR"}}}
+transaction_rub: Dict[str, Dict[str, float]] = {"operationAmount": {"amount": 100.0, "currency": {"code": "RUB"}}}
 
 try:
     print(returns_transaction_amount(transaction_usd))  # Конвертирует 100 USD в RUB
