@@ -14,12 +14,17 @@ API_KEY: str = os.getenv("API_KEY") or ""
 BASE_URL: str = "https://api.apilayer.com/exchangerates_data/convert"
 
 
-def returns_transaction_amount(transaction: Dict[str, Dict[str, float]]) -> float:
+def returns_transaction_amount(transaction: Dict[str, Dict[str, float]]) -> Dict[str, Dict[str, str]]:
+    """
+    Функция принимает на вход транзакцию и возвращает сумму транзакции (amount) в рублях,
+    тип данных — float. Если транзакция была в USD или EUR, происходит обращение к внешнему API
+    для получения текущего курса валют и конвертации суммы операции в рубли.
+    """
     amount: float = transaction["operationAmount"]["amount"]
     currency: str = transaction["operationAmount"]["currency"]["code"]
 
     if currency == "RUB":
-        return float(amount)
+        return {"operationAmount": {"amount": str(amount), "currency": {"name": "руб.", "code": "RUB"}}}
 
     elif currency in ["USD", "EUR"]:
         params: Dict[str, str] = {"to": "RUB", "from": currency, "amount": str(amount)}
@@ -28,7 +33,8 @@ def returns_transaction_amount(transaction: Dict[str, Dict[str, float]]) -> floa
 
         if response.status_code == 200:
             data = response.json()
-            return float(data.get("result", 0))  # Изменено здесь
+            converted_amount = float(data.get("result", 0))
+            return {"operationAmount": {"amount": str(converted_amount), "currency": {"name": "руб.", "code": "RUB"}}}
         else:
             raise Exception("Ошибка получения данных о курсе валют")
 
