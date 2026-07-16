@@ -24,7 +24,7 @@ def returns_transaction_amount(transaction: Dict[str, Dict[str, float]]) -> Dict
     currency: str = transaction["operationAmount"]["currency"]["code"]
 
     if currency == "RUB":
-        return {"operationAmount": {"amount": str(amount), "currency": {"name": "руб.", "code": "RUB"}}}
+        return {"operationAmount": {"amount": f"{amount:.1f}", "currency": {"name": "руб.", "code": "RUB"}}}
 
     elif currency in ["USD", "EUR"]:
         params: Dict[str, str] = {"to": "RUB", "from": currency, "amount": str(amount)}
@@ -34,7 +34,9 @@ def returns_transaction_amount(transaction: Dict[str, Dict[str, float]]) -> Dict
         if response.status_code == 200:
             data = response.json()
             converted_amount = float(data.get("result", 0))
-            return {"operationAmount": {"amount": str(converted_amount), "currency": {"name": "руб.", "code": "RUB"}}}
+            return {
+                "operationAmount": {"amount": f"{converted_amount:.1f}", "currency": {"name": "руб.", "code": "RUB"}}
+            }
         else:
             raise Exception("Ошибка получения данных о курсе валют")
 

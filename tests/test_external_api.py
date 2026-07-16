@@ -13,7 +13,7 @@ def test_returns_transaction_amount_usd(mock_get):
 
     transaction = {"operationAmount": {"amount": 100, "currency": {"code": "USD"}}}
     result = returns_transaction_amount(transaction)
-    assert result == 7500
+    assert result == {"operationAmount": {"amount": "7500.0", "currency": {"name": "руб.", "code": "RUB"}}}
 
 
 # Тестирование конвертации EUR
@@ -25,14 +25,16 @@ def test_returns_transaction_amount_eur(mock_get):
 
     transaction = {"operationAmount": {"amount": 100, "currency": {"code": "EUR"}}}
     result = returns_transaction_amount(transaction)
-    assert result == 8000
+    assert result == {"operationAmount": {"amount": "8000.0", "currency": {"name": "руб.", "code": "RUB"}}}
 
 
 # Тестирование суммы в рублях
 def test_returns_transaction_amount_rub():
     transaction = {"operationAmount": {"amount": 100, "currency": {"code": "RUB"}}}
     result = returns_transaction_amount(transaction)
-    assert result == 100  # Просто возвращаем сумму
+    assert result == {
+        "operationAmount": {"amount": "100.0", "currency": {"name": "руб.", "code": "RUB"}}
+    }  # Просто возвращаем сумму
 
 
 # Тестирование неизвестной валюты
