@@ -1,46 +1,44 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from src.external_api import returns_transaction_amount
 
 
 # Тестирование конвертации USD
 @patch("src.external_api.requests.get")  # Замена requests.get на мок
-def test_returns_transaction_amount_usd(mock_get):
+def test_returns_transaction_amount_usd(mock_get: Mock):
     # Настройка мока для ответа от API
     mock_get.return_value.status_code = 200
     mock_get.return_value.json = lambda: {"result": 7500}  # Предположим, что 100 USD = 7500 RUB
 
-    transaction = {"operationAmount": {"amount": 100, "currency": {"code": "USD"}}}
+    transaction = {"operationAmount": {"amount": "100.0", "currency": {"code": "USD"}}}
     result = returns_transaction_amount(transaction)
-    assert result == {"operationAmount": {"amount": "7500.0", "currency": {"name": "руб.", "code": "RUB"}}}
+    assert result == 7500.0  # Проверка результата
 
 
 # Тестирование конвертации EUR
 @patch("src.external_api.requests.get")  # Замена requests.get на мок
-def test_returns_transaction_amount_eur(mock_get):
+def test_returns_transaction_amount_eur(mock_get: Mock):
     # Настройка мока для ответа от API
     mock_get.return_value.status_code = 200
     mock_get.return_value.json = lambda: {"result": 8000}  # Предположим, что 100 EUR = 8000 RUB
 
-    transaction = {"operationAmount": {"amount": 100, "currency": {"code": "EUR"}}}
+    transaction = {"operationAmount": {"amount": "100.0", "currency": {"code": "EUR"}}}
     result = returns_transaction_amount(transaction)
-    assert result == {"operationAmount": {"amount": "8000.0", "currency": {"name": "руб.", "code": "RUB"}}}
+    assert result == 8000.0  # Проверка результата
 
 
 # Тестирование суммы в рублях
 def test_returns_transaction_amount_rub():
-    transaction = {"operationAmount": {"amount": 100, "currency": {"code": "RUB"}}}
+    transaction = {"operationAmount": {"amount": "100.0", "currency": {"code": "RUB"}}}
     result = returns_transaction_amount(transaction)
-    assert result == {
-        "operationAmount": {"amount": "100.0", "currency": {"name": "руб.", "code": "RUB"}}
-    }  # Просто возвращаем сумму
+    assert result == 100.0  # Проверка результата
 
 
 # Тестирование неизвестной валюты
 @patch("src.external_api.requests.get")  # Замена requests.get на мок
-def test_returns_transaction_amount_invalid_currency(mock_get):
-    transaction = {"operationAmount": {"amount": 100, "currency": {"code": "GBP"}}}
+def test_returns_transaction_amount_invalid_currency(mock_get: Mock):
+    transaction = {"operationAmount": {"amount": "100.0", "currency": {"code": "GBP"}}}
     try:
         returns_transaction_amount(transaction)
     except ValueError as e:
@@ -49,12 +47,12 @@ def test_returns_transaction_amount_invalid_currency(mock_get):
 
 # Тестирование ошибки API
 @patch("src.external_api.requests.get")  # Замена requests.get на мок
-def test_returns_transaction_amount_api_error(mock_get):
+def test_returns_transaction_amount_api_error(mock_get: Mock):
     # Настройка мока для ответа от API с ошибкой
     mock_get.return_value.status_code = 400
     mock_get.return_value.json = lambda: {"error": {"info": "Invalid API key"}}
 
-    transaction = {"operationAmount": {"amount": 100, "currency": {"code": "USD"}}}
+    transaction = {"operationAmount": {"amount": "100.0", "currency": {"code": "USD"}}}
     try:
         returns_transaction_amount(transaction)
     except Exception as e:
