@@ -15,6 +15,7 @@
 log.
 6. utils - возвращает список словарей с данными о финансовых транзакциях из JSON-файла.
 7. external_api - возвращает сумму транзакции и конвертации суммы операции в рубли.
+8. finance - возвращает списки транзакций из файлов CSV и  Excel.
 
 ## Использование:
 1. Для использования модуля "masks" нужно подать в функции номер карты и номер счёта.
@@ -28,6 +29,7 @@ filename, который определяет, куда будут записы�
 6. Для использования "utils" принимает на вход путь до JSON-файла.
 7. Для использования "external_api" принимает на вход транзакцию, а также происходит
 обращение к внешнему API.
+8. Для использования "finance" принимает на вход пути к файлам CSV и  Excel.
 
 ## Тестирование
 1. test_masks - тестирует функции: get_mask_card_number, get_mask_account.
@@ -38,3 +40,4 @@ card_number_generator.
 5. test_decorators - тестирует декоратор log.
 6. test_utils - тестирует функцию json_file_returns_list_dictionaries.
 7. test_external_api - тестирует функцию returns_transaction_amount.
+8. test_finance - тестирует функции transactions_csv, transactions_excel_xlsx.
