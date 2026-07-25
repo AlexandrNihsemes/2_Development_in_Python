@@ -1,38 +1,62 @@
-def get_mask_card_number(card_number):
+import logging
+import os
+
+# Настройка логирования
+logger = logging.getLogger("masks")
+logger.setLevel(logging.DEBUG)  # Уровень логирования не ниже DEBUG
+
+# Создаем обработчик для записи логов в файл
+log_file_path = os.path.join(os.getcwd(), "masks.log")
+file_handler = logging.FileHandler(log_file_path, encoding="utf-8")  # Указываем кодировку
+file_handler.setLevel(logging.DEBUG)  # Уровень обработчика
+
+# Создаем форматер для логов
+file_formatter = logging.Formatter("%(asctime)s - %(module)s - %(levelname)s - %(message)s")
+file_handler.setFormatter(file_formatter)  # Устанавливаем форматер для обработчика
+
+# Добавляем обработчик к логгеру
+logger.addHandler(file_handler)
+
+
+def get_mask_card_number(card_number: str) -> str:
     """Функция принимает на вход номер карты и возвращает ее маску.
     Номер карты замаскирован и отображается в формате XXXX XX** **** XXXX."""
 
-    first_slice = card_number[:6]  # первый срез до маски
-    second_slice = card_number[6:12]  # второй срез - маска
-    third_slice = card_number[12:]  # третий срез после маски
+    # Проверяем, что номер карты состоит из 16 цифр и состоит из цифр
+    if len(card_number) != 16 or not card_number.isdigit():
+        logger.error("Неверный ввод номера карты")  # Логирование ошибки
+        raise ValueError("Неверный ввод")
 
-    sum_of_cuts = first_slice + "******" + third_slice  # сумма срезов
-
-    slice_1 = sum_of_cuts[:4]  # первый срез
-    slice_2 = sum_of_cuts[4:8]  # второй срез
-    slice_3 = sum_of_cuts[8:12]  # третий срез
-    slice_4 = sum_of_cuts[12:]  # четвёртый срез
-
-    number_with_spaces = (
-            slice_1 + " " + slice_2 + " " + slice_3 + " " + slice_4
-    )  # номер с пробелами
-
-    return number_with_spaces
+    # Формируем маску
+    masked_number = f"{card_number[:6]}******{card_number[12:]}"
+    logger.info(f"Замаскированный номер карты: {masked_number}")  # Логирование успешного случая
+    # Форматируем номер с пробелами
+    return " ".join([masked_number[i : i + 4] for i in range(0, len(masked_number), 4)])
 
 
-def get_mask_account(account_number):
+def get_mask_account(account_number: str) -> str:
     """Функция принимает на вход номер счета и возвращает его маску.
     Номер счета замаскирован и отображается в формате **XXXX."""
 
-    slice_account = account_number[-4:]  # срез последних 4-х цифр
+    # Проверяем, что номер счета состоит из 20 цифр и состоит из цифр
+    if len(account_number) != 20 or not account_number.isdigit():
+        logger.error("Неверный ввод номера счета")  # Логирование ошибки
+        raise ValueError("Неверный ввод")
 
-    account_mask = "**" + slice_account  # номер с маской
-
+    # Формируем маску
+    account_mask = "**" + account_number[-4:]
+    logger.info(f"Замаскированный номер счета: {account_mask}")  # Логирование успешного случая
     return account_mask
 
 
-print(get_mask_card_number('7000792289606361'))
-print(get_mask_account('73654108430135874305'))
+# Примеры использования
+if __name__ == "__main__":
+    print(get_mask_card_number("7000792289606361"))  # Ожидается: 700079 ****** 6361
+    print(get_mask_account("73654108430135874305"))  # Ожидается: **7305
 
 
-#python src/masks.py
+# python src/masks.py
+# black src/masks.py
+# flake8 src/masks.py
+# mypy src/masks.py
+# isort src/masks.py
