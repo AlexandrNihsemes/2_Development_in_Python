@@ -19,7 +19,7 @@ file_handler.setFormatter(file_formatter)  # Устанавливаем форм
 logger.addHandler(file_handler)
 
 # Путь к JSON-файлу
-json_file_path = "./data/operations.json"
+json_file_path = "C:/Users/Did-Fil/PycharmProjects/9.1 Masking bank card and account numbers/data/operations.json"
 
 
 def json_file_returns_list_dictionaries(file_path: str) -> list:
@@ -45,8 +45,8 @@ def json_file_returns_list_dictionaries(file_path: str) -> list:
         return []  # Возвращаем пустой список в случае ошибки
 
 
-# Пример вызова функции
-print(json_file_returns_list_dictionaries(json_file_path))
+if __name__ == "__main__":
+    print(json_file_returns_list_dictionaries(json_file_path))
 
 
 # python src/utils.py

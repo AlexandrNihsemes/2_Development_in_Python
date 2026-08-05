@@ -9,7 +9,7 @@ def mask_account_card(string: str) -> str:
 
     news_string_words = " ".join(string_words[:-1])
 
-    words_an = ["Maestro", "MasterCard", "Visa Classic", "Visa Platinum", "Visa Gold"]
+    words_an = ["Maestro", "MasterCard", "Visa Classic", "Visa Platinum", "Visa Gold",  "МИР"]
     words_ru = ["Счет"]
 
     if news_string_words in words_an and len(string_words[-1]) == 16:
@@ -22,9 +22,9 @@ def mask_account_card(string: str) -> str:
         raise ValueError("Неверный ввод")
 
 
-print(mask_account_card("Visa Platinum 7000792289606361"))
-print(mask_account_card("Maestro 7000792289606361"))
-print(mask_account_card("Счет 73654108430135874305"))
+# print(mask_account_card("Visa Platinum 7000792289606361"))
+# print(mask_account_card("Maestro 7000792289606361"))
+# print(mask_account_card("Счет 73654108430135874305"))
 
 
 def get_date(date: str) -> str:
@@ -45,7 +45,7 @@ def get_date(date: str) -> str:
     return f"{day}.{month}.{year}"
 
 
-print(get_date("2024-03-11T02:26:18.671407"))
+# print(get_date("2024-03-11T02:26:18.671407"))
 
 
 # python src/widget.py

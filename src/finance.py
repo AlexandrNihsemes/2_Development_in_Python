@@ -4,7 +4,7 @@ from typing import List
 
 import pandas as pd
 
-file_transactions_csv = "./data/transactions.csv"
+file_transactions_csv = "C:/Users/Did-Fil/PycharmProjects/9.1 Masking bank card and account numbers/data/transactions.csv"
 
 
 def transactions_csv(file_transactions_csv: str) -> list[dict]:
@@ -15,7 +15,7 @@ def transactions_csv(file_transactions_csv: str) -> list[dict]:
     with open(file_transactions_csv, "r", encoding="utf-8") as file:
         reader = csv.DictReader(file, delimiter=";")  # Указываем разделитель
         # Печать заголовков для отладки
-        print("Заголовки CSV:", reader.fieldnames)
+        # print("Заголовки CSV:", reader.fieldnames)
         for row in reader:
             # Указываем ключи
             transaction = {
