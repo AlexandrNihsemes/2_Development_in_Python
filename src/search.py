@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 from typing import Dict
 from typing import List
 
@@ -10,12 +11,10 @@ def search_transactions(transactions: List[Dict[str, str]], search_term: str) ->
     matching_transactions = []  # Список для хранения подходящих транзакций
 
     for transaction in transactions:
-        # Проверяем каждое поле в транзакции
-        for key, value in transaction.items():
-            if isinstance(value, str):  # Проверяем, является ли значение строкой
-                if pattern.search(value):
-                    matching_transactions.append(transaction)
-                    break  # Выходим из цикла, если нашли совпадение
+        value = transaction.get("description", "")
+        if isinstance(value, str):  # Проверяем, является ли значение строкой
+            if pattern.search(value):
+                matching_transactions.append(transaction)
 
     return matching_transactions
 
@@ -75,17 +74,11 @@ if __name__ == "__main__":
 
 def count_transactions_by_category(transactions: List[Dict[str, str]], categories: List[str]) -> Dict[str, int]:
     """Функция для подсчета количества операций по категориям из списка транзакций."""
-    category_count = {category: 0 for category in categories}  # Устанавливаем начальное значение для каждой категории
 
-    for transaction in transactions:
-        if "description" in transaction:
-            description = transaction["description"].lower()  # Приводим описание к нижнему регистру
-            for category in categories:
-                if category.lower() in description:  # Проверяем, содержится ли категория в описании
-                    category_count[category] += 1  # Увеличиваем счетчик для соответствующей категории
-                    break  # Выходим из цикла, если категория найдена
-
-    return category_count
+    descriptions = []
+    for tr in transactions:
+        descriptions.append(tr.get("description", "Без категории"))
+    return Counter(descriptions)
 
 
 if __name__ == "__main__":

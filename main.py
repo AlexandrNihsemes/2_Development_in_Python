@@ -126,6 +126,9 @@ def main() -> list[dict]:
         if currency_filtering == "да":
             currency_code = "RUB"
             currency_transactions = list(filter_by_currency(filtration_by_state, code=currency_code))
+            if not currency_transactions:
+                print("Не найдено ни одной транзакции, подходящей под ваши условия фильтрации")
+                return
             break
         elif currency_filtering == "нет":
             print("Выводим все транзакции, без учёта валюты.")
@@ -167,13 +170,7 @@ def main() -> list[dict]:
     print("Распечатываю итоговый список транзакций...")
     print()
 
-    counter = 0
-
-    for fil in filtering_by_word:
-        if "id" in fil:
-            counter += 1
-
-    print(f"Всего банковских операций в выборке: {counter}")
+    print(f"Всего банковских операций в выборке: {len(filtering_by_word)}")
     print()
 
     if filtering_by_word:
@@ -186,7 +183,10 @@ def main() -> list[dict]:
             sum_filter = transaction["operationAmount"]["amount"]
             currency_name = transaction["operationAmount"]["currency"]["name"]
 
-            print(f"Дата: {short_shelf_life} {payment_status}, {payment_method}, Сумма: {sum_filter} {currency_name}")
+            print(short_shelf_life, payment_status)
+            print(payment_method)
+            print(f"Сумма: {sum_filter} {currency_name}")
+            print()
 
     else:
         print("Не найдено ни одной транзакции, подходящей под ваши условия фильтрации")

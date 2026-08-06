@@ -219,4 +219,6 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-main.py
+111.py
+222.py
+.gitignore
